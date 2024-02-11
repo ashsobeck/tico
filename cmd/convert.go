@@ -38,6 +38,13 @@ to quickly create a Cobra application.`,
 
 func init() {
 	rootCmd.AddCommand(convertCmd)
+	convertCmd.AddCommand(shortCmd)
+	convertCmd.AddCommand(shortdateCmd)
+	convertCmd.AddCommand(shortdatetimeCmd)
+	convertCmd.AddCommand(longCmd)
+	convertCmd.AddCommand(longdateCmd)
+	convertCmd.AddCommand(longdatetimeCmd)
+	convertCmd.AddCommand(relativeCmd)
 
 	// Here you will define your flags and configuration settings.
 
