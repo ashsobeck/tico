@@ -1,12 +1,12 @@
 /*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
+Copyright © 2024 Ashton Sobeck ashton@sobeck.dev
 */
 package cmd
 
 import (
 	"fmt"
-	"math"
-	"time"
+
+	"github.com/ashsobeck/tico/parser"
 
 	"github.com/spf13/cobra"
 )
@@ -24,52 +24,16 @@ to quickly create a Cobra application.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("convert called")
-		date := ""
-		if _, err := time.Parse(time.RFC3339, args[0]+"T00:00:00Z"); err == nil {
-			date += args[0]
-		} else {
-			fmt.Println(err.Error())
-			fmt.Println("[ERROR]: wrong time arg format. Need 'YYYY-MM-DD'")
-			return
-		}
+		ticks, err := parser.ParseDate(args)
 
-		_, offset := time.Now().Zone()
-		off := convertOffset(offset)
-		if len(args) >= 2 && args[1] != "" {
-			date += "T" + args[1] + ":00" + off
-		} else {
-			fmt.Println(offset)
-			date += "T00:00:00" + off
-		}
-		ticks, err := time.Parse(time.RFC3339, date)
 		if err != nil {
 			fmt.Println(err.Error())
-			fmt.Println("[ERROR]: wrong time arg format. Need 'HH:MM' (24 hour)")
 			return
 		}
-		fmt.Println("Time:", date)
-		str := Convert(ticks.Unix(), Default)
-		fmt.Println(str)
+
+		dateStr := parser.Convert(ticks, parser.Default)
+		fmt.Println(dateStr)
 	},
-}
-
-func convertOffset(offset int) string {
-	var symbol string
-	if offset >= 0 {
-		symbol = "+"
-	} else {
-		symbol = "-"
-	}
-	offset /= 3600
-	offset = int(math.Abs(float64(offset)))
-
-	if offset < 10 {
-		symbol += fmt.Sprintf("0%d:00", offset)
-	} else {
-		symbol += fmt.Sprintf("%d:00", offset)
-	}
-
-	return symbol
 }
 
 func init() {

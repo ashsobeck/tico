@@ -1,12 +1,12 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
 
+	"github.com/ashsobeck/tico/parser"
 	"github.com/spf13/cobra"
 )
 
@@ -22,6 +22,15 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("shortdatetime called")
+		ticks, err := parser.ParseDate(args)
+
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+		dateStr := parser.Convert(ticks, parser.ShortDateTime)
+		fmt.Println(dateStr)
 	},
 }
 
